@@ -10,6 +10,9 @@ import datetime
 import os
 import sys
 from playsound import playsound
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class Monitor:
     def __init__(self, url, interval, keyword, log_directory='logs', sound_file='sounds/alert.mp3'):
@@ -69,7 +72,15 @@ class Monitor:
                 print("等待页面加载...")
                 time.sleep(5)  # 等待页面加载
 
-                print("正在获取页面内容...")
+                # 等待并点击"上架时间"按钮
+                wait = WebDriverWait(self.driver, 10)
+                upload_time_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), '上架时间')]")))
+                upload_time_button.click()
+                
+                # 等待页面加载完成
+                time.sleep(2)
+                
+                # 获取页面内容并进行后续处理
                 page_text = self.driver.find_element("tag name", "body").text
                 print("已成功获取页面内容")
                 self.save_log(page_text)
