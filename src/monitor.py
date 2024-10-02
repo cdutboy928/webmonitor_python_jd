@@ -73,14 +73,22 @@ class Monitor:
                 time.sleep(5)  # 等待页面加载
 
                 # 等待并点击"上架时间"按钮
+                print("尝试定位'上架时间'按钮...")
                 wait = WebDriverWait(self.driver, 10)
-                upload_time_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), '上架时间')]")))
-                upload_time_button.click()
+                try:
+                    upload_time_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), '上架时间')]")))
+                    print("'上架时间'按钮已找到，正在点击...")
+                    upload_time_button.click()
+                    print("'上架时间'按钮点击成功")
+                except Exception as e:
+                    print(f"点击'上架时间'按钮时发生错误: {e}")
                 
                 # 等待页面加载完成
+                print("等待页面重新加载...")
                 time.sleep(2)
                 
                 # 获取页面内容并进行后续处理
+                print("正在获取页面内容...")
                 page_text = self.driver.find_element("tag name", "body").text
                 print("已成功获取页面内容")
                 self.save_log(page_text)
